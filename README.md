@@ -80,16 +80,29 @@ parted /dev/nvme0n1 -- align-check optimal 1 # check boot
 parted /dev/nvme0n1 -- align-check optimal 2 # check root
 ```
 
-## Create snapshot of empty the empty volume root
-
-```console
-btrfs subvolume snapshot -r /mnt/root /mnt/root-blank
-```
-
 ## Enroll/setup FIDO2 with LUKS
 
 ```console
-btrfs subvolume snapshot -r /mnt/root /mnt/root-blank
+# Setup/Enroll FIDO2 with LUKS
+# - https://nixos.org/manual/nixos/stable/#sec-luks-file-systems
+# - https://nixos.org/manual/nixos/stable/#sec-luks-file-systems-fido2
+cryptsetup status /dev/disk/by-label/ROOT # "is active" indicate it is open/unencrypted
+cryptsetup luksDump /dev/nvme0n1p2 # show info luks header and key slots used
+# plug in yubikey and make sure volume is unecrypted
+# it will first prompt for passphrase
+# followed by FIDO2 pin
+# finally you need to touch yubikey when it blinks
+systemd-cryptenroll --fido2-device=auto /dev/nvme0n1p2 # note we are referencing the underlying block device
+# finally we generate a recovery key
+# write down and store in a safe physical location
+systemd-cryptenroll --recovery-key /dev/nvme0n1p2
+# at last we will remove our default passphrase, beacuse we have the recovery key now.
+# enter passphrase for the key you want to remove
+cryptsetup luksRemoveKey /dev/nvme0n1p2 # you can also use "cryptsetup luksKillSlot /dev/nvme0n1p2 0"
+# Run below command and you can verify keyslot 1 (fido2) and 2 (recovery-key) are the only keyslots used/available
+cryptsetup luksDump /dev/nvme0n1p2
+# TODO: backup luks header to persist (either encrypted or unencrypted)
+# 
 ```
 
 ## Install
