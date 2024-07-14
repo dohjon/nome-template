@@ -8,7 +8,6 @@
           type = "gpt";
           partitions = {
             ESP = {
-              label = "esp";
               type = "EF00";
               start = "1MiB";
               end = "1GiB";
@@ -20,9 +19,7 @@
               };
             };
             luks = {
-              label = "nixos";
-              start = "1GiB";
-              end = "100%";
+              size = "100%";
               content = {
                 type = "luks";
                 name = "crypted";
@@ -31,6 +28,13 @@
                 content = {
                   type = "btrfs";
                   extraArgs = [ "-f" ];  # Override existing partition
+                  postCreateHook = ''
+                    TMPDIR=$(mktemp -d)
+                    mount "/dev/mapper/pool-root" "$TMPDIR" -o subvol=/
+                    trap 'umount $TMPDIR; rm -rf $TMPDIR' EXIT
+                    # Create snapshot of the empty volume root
+                    btrfs subvolume snapshot -r $TMPDIR/root $TMPDIR/root-blank
+                  '';
                   subvolumes = {
                     "/root" = {
                       mountpoint = "/";
