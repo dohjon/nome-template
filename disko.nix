@@ -1,55 +1,52 @@
 {
   disko.devices = {
     disk = {
-      vdb = {
+      nvme0n1 = {
         type = "disk";
-        device = "/dev/vdb";
+        device = "/dev/nvme0n1";
         content = {
           type = "gpt";
           partitions = {
             ESP = {
-              size = "512M";
+              label = "esp";
               type = "EF00";
+              start = "1MiB";
+              end = "1GiB";
               content = {
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [
-                  "defaults"
-                ];
+                mountOptions = [ "umask=0077" ];
               };
             };
             luks = {
-              size = "100%";
+              label = "nixos";
+              start = "1GiB";
+              end = "100%";
               content = {
                 type = "luks";
                 name = "crypted";
-                # disable settings.keyFile if you want to use interactive password entry
                 #passwordFile = "/tmp/secret.key"; # Interactive
-                settings = {
-                  allowDiscards = true;
-                  keyFile = "/tmp/secret.key";
-                };
-                additionalKeyFiles = [ "/tmp/additionalSecret.key" ];
+                settings.allowDiscards = true; # less secure, For SSDs, allowing discards can improve performance and wear leveling
                 content = {
                   type = "btrfs";
-                  extraArgs = [ "-f" ];
+                  extraArgs = [ "-f" ];  # Override existing partition
                   subvolumes = {
                     "/root" = {
                       mountpoint = "/";
-                      mountOptions = [ "compress=zstd" "noatime" ];
-                    };
-                    "/home" = {
-                      mountpoint = "/home";
                       mountOptions = [ "compress=zstd" "noatime" ];
                     };
                     "/nix" = {
                       mountpoint = "/nix";
                       mountOptions = [ "compress=zstd" "noatime" ];
                     };
-                    "/swap" = {
-                      mountpoint = "/.swapvol";
-                      swap.swapfile.size = "20M";
+                    "/persist" = {
+                      mountpoint = "/persist";
+                      mountOptions = [ "compress=zstd" "noatime" ];
+                    };
+                    "/state" = {
+                      mountpoint = "/state";
+                      mountOptions = [ "compress=zstd" "noatime" ];
                     };
                   };
                 };
