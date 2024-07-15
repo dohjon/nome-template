@@ -58,6 +58,7 @@
           };
         };
       };
+    };
   };
 
   fileSystems."/state".neededForBoot = true;
