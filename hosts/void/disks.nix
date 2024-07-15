@@ -27,7 +27,7 @@
               settings.allowDiscards = true; # less secure, For SSDs, allowing discards can improve performance and wear leveling
               content = {
                 type = "btrfs";
-                extraArgs = [ "-f" ];  # Override existing partition
+                #extraArgs = [ "-f" ];  # Override existing partition
                 postCreateHook = ''
                   TMPDIR=$(mktemp -d)
                   #mount "${config.system.devices.luksMappedDevice}" "$TMPDIR" -o subvol=/
