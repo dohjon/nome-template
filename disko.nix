@@ -23,14 +23,13 @@
               content = {
                 type = "luks";
                 name = "crypted";
-                #passwordFile = "/tmp/secret.key"; # Interactive
                 settings.allowDiscards = true; # less secure, For SSDs, allowing discards can improve performance and wear leveling
                 content = {
                   type = "btrfs";
                   extraArgs = [ "-f" ];  # Override existing partition
                   postCreateHook = ''
                     TMPDIR=$(mktemp -d)
-                    mount "/dev/mapper/pool-root" "$TMPDIR" -o subvol=/
+                    mount "/dev/mapper/crypted" "$TMPDIR" -o subvol=/
                     trap 'umount $TMPDIR; rm -rf $TMPDIR' EXIT
                     # Create snapshot of the empty volume root
                     btrfs subvolume snapshot -r $TMPDIR/root $TMPDIR/root-blank
