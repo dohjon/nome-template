@@ -121,3 +121,8 @@ then install
 ```console
 nixos-install --flake .#nixos
 ```
+
+
+## Update firmware
+
+TODO> see hardware module for framework 13 amd 7040
