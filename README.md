@@ -50,7 +50,11 @@ nvme0n1  259:0     0    932G   0    disk
 Download standalone disko configuration
 
 ```console
-sudo nix run --experimental-features "nix-command flakes" 'github:nix-community/disko#disko-install' -- --write-efi-boot-entries --flake 'github:dohjon/nome-template#laptop'
+# Format: sudo nix run 'github:nix-community/disko#disko-install' -- --flake <flake-url>#<flake-attr> --disk <disk-name> <disk-device>
+sudo nix run --experimental-features "nix-command flakes" 'github:nix-community/disko#disko-install' -- --write-efi-boot-entries --flake 'github:dohjon/nome-template#laptop' --disk nvme0n1 /dev/nvme0n1
+
+# You can specify commit by doing
+# 'github:dohjon/nome-template/e992516#laptop'
 ```
 
 
