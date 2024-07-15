@@ -43,6 +43,18 @@ nvme0n1  259:0     0    932G   0    disk
 ...
 ```
 
+
+
+## Disko install (with flake and existing disko config)
+
+Download standalone disko configuration
+
+```console
+sudo nix run --experimental-features "nix-command flakes" 'github:nix-community/disko#disko-install' -- --write-efi-boot-entries --flake 'github:dohjon/nome-template#laptop'
+```
+
+
+
 ## disko
 
 Download standalone disko configuration
