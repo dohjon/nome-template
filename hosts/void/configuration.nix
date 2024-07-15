@@ -8,6 +8,10 @@
     ../../modules/nixos/system/devices.nix
   ];
 
+  # Bootloader
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   # Custom
   system.devices = {
     rootDisk = "/dev/nvme0n1";
