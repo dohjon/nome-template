@@ -2,7 +2,7 @@
 
 {
   imports = [
-    inputs..disko.nixosModules.disko
+    inputs.disko.nixosModules.disko
     ./disks.nix
     ./hardware.nix
     ../../modules/nixos/system/devices.nix
