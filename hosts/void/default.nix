@@ -34,7 +34,7 @@
 
   networking.networkmanager.enable = true;
   networking.hostName = "void";
-  
+
   users.mutableUsers = false;
   users.users.dohjon = {
   	isNormalUser = true;
