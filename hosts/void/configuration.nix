@@ -1,7 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   imports = [
+    inputs..disko.nixosModules.disko
     ./disks.nix
     ./hardware.nix
     ../../modules/nixos/system/devices.nix
