@@ -22,7 +22,7 @@
       nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {inherit (self) inputs outputs;};
-        modules = systemModules ? [] ++ [./hosts/${host}];
+        modules = systemModules ++ [./hosts/${host}];
       };
 
   in {
@@ -33,7 +33,7 @@
         inputs.nixos-hardware.nixosModules.framework-13-7040-amd
       ];
 
-      iso = nixosSystem "installer" "x86_64-linux";
+      installer = nixosSystem "installer" "x86_64-linux" [];
 
     };
   };
