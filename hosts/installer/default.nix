@@ -5,11 +5,11 @@
         "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
     ];
 
-    # isoImage.isoBaseName = "nome_installer";
-
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
     environment.systemPackages = with pkgs; [
+        btop
+	networkmanager
         (writeShellApplication {
         name = "nome-install";
         runtimeInputs = [ nix disko git ];
@@ -17,24 +17,22 @@
             set -euxo pipefail
 
             if [ "$#" -ne 1 ]; then
-                echo "Usage: nome-install <hostname>"
+                echo "Usage: nome-install <host>"
                 exit 1
             fi
 
-            hostname=$1
-            config="https://github.com/dohjon/nome-template"
+            HOST=$1
+            URI="github:dohjon/nome-template"
 
             # https://github.com/nix-community/disko/blob/master/disko
-            #nix run github:nix-community/disko -- --mode disko --flake "$config#$hostname"
-            disko --mode disko --flake "$config#$hostname"
+            disko --mode disko --flake "$URI#$HOST"
 
             # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/installer/tools/nixos-install.sh
             installArgs=(--no-channel-copy)
-            nixos-install --flake "$config#$hostname" "''${installArgs[@]}"
+            nixos-install --flake "$URI#$HOST" "''${installArgs[@]}"
 
-            git clone "$config" /mnt/home/$username/nome
+            git clone https://github.com/dohjon/nome-template.git /mnt/etc/nixos
         '';
         })
   ];
 }
-
