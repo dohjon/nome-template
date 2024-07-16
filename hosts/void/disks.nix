@@ -24,7 +24,6 @@
             content = {
               type = "luks";
               name = "${lib.removePrefix "/dev/mapper/" config.system.devices.luksMappedDevice}";
-              settings.allowDiscards = true; # less secure, For SSDs, allowing discards can improve performance and wear leveling
               content = {
                 type = "btrfs";
                 postCreateHook = ''
