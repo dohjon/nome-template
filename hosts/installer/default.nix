@@ -3,13 +3,11 @@
 {
     imports = [
         "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
+        # "${modulesPath}/installer/cd-dvd/installation-cd-graphical-gnome.nix"
     ];
 
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
     environment.systemPackages = with pkgs; [
-        btop
-	networkmanager
+        gitMinimal
         (writeShellApplication {
         name = "nome-install";
         runtimeInputs = [ nix disko git ];
@@ -25,6 +23,7 @@
             URI="github:dohjon/nome-template"
 
             # https://github.com/nix-community/disko/blob/master/disko
+            # nix run github:nix-community/disko -- --mode disko --flake github:dohjon/nome-template#laptop
             disko --mode disko --flake "$URI#$HOST"
 
             # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/installer/tools/nixos-install.sh
@@ -34,5 +33,34 @@
             git clone https://github.com/dohjon/nome-template.git /mnt/etc/nixos
         '';
         })
-  ];
+    ];
+
+    environment.shellAliases = {
+        ll  = "ls -alh";
+    };
+
+    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+    users.users.root = {
+        openssh.authorizedKeys.keys = [
+            # https://github.com/dohjon.keys
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM1lTOnrkoGlToh6Mtga3/wh9/knokBlsQKU3MSC3CcB"
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP8XIwh2g+vCI1pVDkF0bHAO013jN2fSC++plEpgxibd"
+        ];
+    };
+
+    services.openssh = {
+        enable = true;
+        allowSFTP = false;
+        settings.PasswordAuthentication = false;
+        settings.KbdInteractiveAuthentication = false;
+        challengeResponseAuthentication = false;
+        extraConfig = ''
+        AllowTcpForwarding yes
+        X11Forwarding no
+        AllowAgentForwarding no
+        AllowStreamLocalForwarding no
+        AuthenticationMethods publickey
+        '';
+    };
 }
