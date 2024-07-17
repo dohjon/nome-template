@@ -39,7 +39,7 @@
             #nixos-install --flake github:dohjon/nome-template#laptop --no-channel-copy --no-write-lock-file
             installArgs=(--no-channel-copy --no-write-lock-file)
 
-            if [ "$(nix eval "/mnt/etc/nixos#nixosConfigurations.$INSTALL_HOSTNAME.config.users.mutableUsers")" = "false" ]; then
+            if [ "$(nix eval "$HOST_CONFIG.users.mutableUsers")" = "false" ]; then
                 installArgs+=(--no-root-password)
             fi
 

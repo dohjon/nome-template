@@ -94,7 +94,7 @@
     };
 
     script = ''
-      BTRFS_VOL="''${config.system.devices.luksMappedDevice}"
+      BTRFS_VOL="${config.system.devices.luksMappedDevice}"
       MOUNTDIR=/rollback
       mkdir -p ''${MOUNTDIR}
 
