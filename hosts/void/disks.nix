@@ -27,10 +27,10 @@
               content = {
                 type = "btrfs";
                 postCreateHook = ''
+                  # Part of ephemeral setup, creates snapshot of empty root subvolume to rollback to later on
                   TMPDIR=$(mktemp -d)
                   mount "${config.system.devices.luksMappedDevice}" "$TMPDIR" -o subvol=/
                   trap 'umount $TMPDIR; rm -rf $TMPDIR' EXIT
-                  # Create snapshot of the empty volume root
                   btrfs subvolume snapshot -r $TMPDIR/root $TMPDIR/root-blank
                 '';
                 subvolumes = {
@@ -59,6 +59,7 @@
     };
   };
 
+  # TODO: Convert these to systemd units when Stage 1 (systemd) is complete?
   fileSystems."/state".neededForBoot = true;
   fileSystems."/persist".neededForBoot = true;
 }

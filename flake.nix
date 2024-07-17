@@ -12,7 +12,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # Modules to help you handle persistent state on systems with ephemeral root storage
-    #impermanence.url = "github:nix-community/impermanence";
+    impermanence.url = "github:nix-community/impermanence";
   };
 
   outputs = { self, nixpkgs, ... } @ inputs: let
@@ -31,6 +31,8 @@
 
       laptop = nixosSystem "void" "x86_64-linux" [
         inputs.nixos-hardware.nixosModules.framework-13-7040-amd
+        inputs.disko.nixosModules.disko
+        inputs.impermanence.nixosModules.impermanence
       ];
 
       installer = nixosSystem "installer" "x86_64-linux" [];

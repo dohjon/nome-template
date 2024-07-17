@@ -27,10 +27,33 @@
             disko --mode disko --flake "$URI#$HOST"
 
             # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/installer/tools/nixos-install.sh
+            #nixos-install --flake github:dohjon/nome-template#laptop --no-channel-copy --no-write-lock-file
             installArgs=(--no-channel-copy)
             nixos-install --flake "$URI#$HOST" "''${installArgs[@]}"
 
             git clone https://github.com/dohjon/nome-template.git /mnt/etc/nixos
+
+            # Setup/Enroll FIDO2 with LUKS
+            # https://nixos.org/manual/nixos/stable/#sec-luks-file-systems
+            # https://nixos.org/manual/nixos/stable/#sec-luks-file-systems-fido2
+            echo "Setup/Enroll FIDO2 with LUKS using yubikey (this step requires physical access to the machine)"
+            echo "plug in yubikey... "
+            systemd-cryptenroll --fido2-device=auto /dev/nvme0n1p2
+            echo "first enter current passphrase for disk..."
+            echo "then enter enter security token PIN..."
+            echo "followed by pressing yubikey when blinking..."
+            echo "finally we generate a recovery key..."
+            echo "write down and store in a safe physical location..."
+            systemd-cryptenroll --recovery-key /dev/nvme0n1p2
+
+            echo "we will now remove the passphrase so only fido2 and recovery key is available..."
+            cryptsetup luksRemoveKey /dev/nvme0n1p2
+            echo "Run below command and you can verify keyslot 1 (fido2) and 2 (recovery-key) are the only keyslots used/available..."
+            echo 'cryptsetup luksDump /dev/nvme0n1p2'
+            # TODO: backup luks header to persist (either encrypted or unencrypted)
+
+            echo "Installation done please reboot and unplug live usb..."
+            echo 'systemctl reboot'
         '';
         })
     ];
@@ -54,7 +77,6 @@
         allowSFTP = false;
         settings.PasswordAuthentication = false;
         settings.KbdInteractiveAuthentication = false;
-        challengeResponseAuthentication = false;
         extraConfig = ''
         AllowTcpForwarding yes
         X11Forwarding no

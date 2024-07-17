@@ -2,7 +2,6 @@
 
 {
   imports = [
-    inputs.disko.nixosModules.disko
     ./disks.nix
     ./hardware.nix
     ../../modules/nixos/system/devices.nix
@@ -26,6 +25,8 @@
 
   # https://nixos.org/manual/nixos/stable/#sec-luks-file-systems-fido2-systemd
   boot.initrd = {
+    # Use systemd in stage 1 (new). Instead of scripted stage 1 (old).
+    # https://nixos.org/manual/nixos/stable/#sec-luks-file-systems-fido2-systemd
     systemd.enable = true;
   	luks.devices."${lib.removePrefix "/dev/mapper/" config.system.devices.luksMappedDevice}" = {
       crypttabExtraOpts = [ "fido2-device=auto" ];
