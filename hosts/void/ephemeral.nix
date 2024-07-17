@@ -10,9 +10,10 @@
 
     # Folders you want to map
     directories = [
-      "/var/log"
+      "/etc/nixos"
       "/var/lib/nixos"
       "/var/lib/systemd/coredump"
+      "/var/log"
     ];
 
     # Files you want to map
