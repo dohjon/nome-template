@@ -1,6 +1,7 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
+  imports = [ inputs.impermanence.nixosModules.impermanence ];
 
   # /persist is the location you plan to store the files
   environment.persistence."/persist" = {

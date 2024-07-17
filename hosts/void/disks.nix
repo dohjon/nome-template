@@ -1,6 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
+  imports = [ inputs.disko.nixosModules.disko ];
+
   disko.devices = {
     disk.${lib.removePrefix "/dev/" config.system.devices.rootDisk} = {
       type = "disk";

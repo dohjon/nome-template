@@ -3,6 +3,7 @@
 {
   imports = [
     ./disks.nix
+    ./ephemeral.nix
     ./hardware.nix
     ../../modules/nixos/system/devices.nix
   ];
