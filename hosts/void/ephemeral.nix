@@ -94,14 +94,14 @@
     };
 
     script = ''
-      BTRFS_VOL="${config.system.devices.luksMappedDevice}"
+      BTRFS_VOL="''${config.system.devices.luksMappedDevice}"
       MOUNTDIR=/rollback
-      mkdir -p ${MOUNTDIR}
+      mkdir -p ''${MOUNTDIR}
 
-      mount -t btrfs -o subvol=/ ${BTRFS_VOL} ${MOUNTDIR}
-      ROOT_SUBVOL="${MOUNTDIR}/root"
+      mount -t btrfs -o subvol=/ ''${BTRFS_VOL} ''${MOUNTDIR}
+      ROOT_SUBVOL="''${MOUNTDIR}/root"
       # must match the snapshot name in disks.nix
-      BLANK_ROOT_SNAPSHOT="${MOUNTDIR}/root-blank"
+      BLANK_ROOT_SNAPSHOT="''${MOUNTDIR}/root-blank"
 
       # TODO: investigate this further...
       # While we're tempted to just delete /root and create
@@ -109,21 +109,21 @@
       # populated at this point with a number of subvolumes,
       # which makes `btrfs subvolume delete` fail.
       # So, we remove them first.
-      btrfs subvolume list -o ${ROOT_SUBVOL} |
+      btrfs subvolume list -o ''${ROOT_SUBVOL} |
         cut -f9 -d' ' |
         while read -r subvolume;
         do
           echo "deleting /$subvolume subvolume..."
-          btrfs subvolume delete "${MOUNTDIR}/$subvolume"
+          btrfs subvolume delete "''${MOUNTDIR}/$subvolume"
         done &&
         echo "deleting /root subvolume..." &&
-        btrfs subvolume delete ${ROOT_SUBVOL}
+        btrfs subvolume delete ''${ROOT_SUBVOL}
 
       echo "restoring blank /root subvolume..."
-      btrfs subvolume snapshot ${BLANK_ROOT_SNAPSHOT} ${ROOT_SUBVOL}
+      btrfs subvolume snapshot ''${BLANK_ROOT_SNAPSHOT} ''${ROOT_SUBVOL}
 
-      umount ${MOUNTDIR}
-      rmdir ${MOUNTDIR}
+      umount ''${MOUNTDIR}
+      rmdir ''${MOUNTDIR}
     '';
   };
 }
