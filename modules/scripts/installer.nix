@@ -42,7 +42,7 @@ pkgs.writeShellApplication {
 
     ROOT_DISK=$(nix_eval "profile.rootDisk")
     USERNAME=$(nix_eval "profile.username")
-    MUTABLE_USERS=$(nix_eval "users.mutableUsers")
+    #MUTABLE_USERS=$(nix_eval "users.mutableUsers")
 
     if confirm "Do you want to continue? (WARNING! this will wipe disk $ROOT_DISK)"; then
         echo "Proceeding with installation on machine: $MACHINE"
@@ -57,9 +57,9 @@ pkgs.writeShellApplication {
     # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/installer/tools/nixos-install.sh
     INSTALL_ARGS=(--no-channel-copy --no-write-lock-file)
 
-    if [ "$MUTABLE_USERS" = "false" ]; then
-        INSTALL_ARGS+=(--no-root-password)
-    fi
+    #if [ "$MUTABLE_USERS" = "false" ]; then
+    #    INSTALL_ARGS+=(--no-root-password)
+    #fi
 
     nixos-install --flake "$URI#$MACHINE" "''${INSTALL_ARGS[@]}"
 
