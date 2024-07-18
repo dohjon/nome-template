@@ -18,6 +18,7 @@
       "/var/lib/nixos" # contains important state: https://github.com/nix-community/impermanence/issues/178
       "/var/lib/systemd/coredump"
       "/var/log"
+      "/etc/NetworkManager/system-connections" # TODO: store in keyring, passwords currently stored in plaintext
     ];
 
     # Files you want to map
@@ -27,6 +28,8 @@
       # previous boots.
       "/etc/machine-id"
       #"/var/lib/logrotate.status" # TODO: investigate this further...
+
+      # TODO: need to persist /home/dohjon/nixos
     ];
 
     # Similarly, you can map files and folders in users' home directories

@@ -15,6 +15,15 @@
     luksMappedDevice = "/dev/mapper/crypted";
   };
 
+  environment.systemPackages = with pkgs; [
+    git
+    curl
+    wget
+    vim
+    pciutils # lspci -ks
+    glxinfo # glxinfo | grep "OpenGL renderer"
+  ];
+
   # Use systemd boot (EFI only)
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
