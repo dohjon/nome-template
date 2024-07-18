@@ -6,7 +6,7 @@
     nixosSystem = machine: system: systemModules:
       nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = {inherit self inputs outputs machine;};
+        specialArgs = {inherit self inputs machine;};
         modules = systemModules ++ [./machines/${machine}/configuration.nix];
       };
 
