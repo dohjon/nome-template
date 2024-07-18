@@ -52,7 +52,7 @@ pkgs.writeShellApplication {
     fi
 
     # https://github.com/nix-community/disko/blob/master/disko
-    #disko --mode disko --flake "$URI#$MACHINE"
+    disko --mode disko --flake "$URI#$MACHINE"
 
     # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/installer/tools/nixos-install.sh
     INSTALL_ARGS=(--no-channel-copy --no-write-lock-file)
@@ -61,15 +61,15 @@ pkgs.writeShellApplication {
         INSTALL_ARGS+=(--no-root-password)
     fi
 
-    #nixos-install --flake "$URI#$MACHINE" "''${INSTALL_ARGS[@]}"
+    nixos-install --flake "$URI#$MACHINE" "''${INSTALL_ARGS[@]}"
 
     if [ -z "$USERNAME" ]; then
-        #git clone "$URL" "/mnt/etc/nixos"
+        git clone "$URL" "/mnt/etc/nixos"
     else
-        #git clone "$URL" "/mnt/home/$USERNAME/nixos"
+        git clone "$URL" "/mnt/home/$USERNAME/nixos"
     fi
 
     echo "Installation done please reboot and unplug live usb..."
-    echo 'systemctl reboot'
+    echo "systemctl reboot"
   '';
 }
