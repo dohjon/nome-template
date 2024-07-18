@@ -3,6 +3,10 @@
 {
   imports = [ inputs.impermanence.nixosModules.impermanence ];
 
+  environment.systemPackages = with pkgs; [
+    (callPackage ../../modules/scripts/fs-diff.nix {})
+  ];
+
   # /persist is the location you plan to store the files
   environment.persistence."/persist" = {
     # Hide these mount from the sidebar of file managers
@@ -11,14 +15,18 @@
     # Folders you want to map
     directories = [
       "/etc/nixos"
-      "/var/lib/nixos"
+      "/var/lib/nixos" # contains important state: https://github.com/nix-community/impermanence/issues/178
       "/var/lib/systemd/coredump"
       "/var/log"
     ];
 
     # Files you want to map
     files = [
+      # machine-id is used by systemd for the journal, if you don't persist this
+      # file you won't be able to easily use journalctl to look at journals for
+      # previous boots.
       "/etc/machine-id"
+      #"/var/lib/logrotate.status" # TODO: investigate this further...
     ];
 
     # Similarly, you can map files and folders in users' home directories
@@ -95,7 +103,7 @@
     };
 
     script = ''
-      BTRFS_VOL="${config.system.devices.luksMappedDevice}"
+      BTRFS_VOL="${config.profile.luksMappedDevice}"
       MOUNTDIR=/rollback
       mkdir -p ''${MOUNTDIR}
 

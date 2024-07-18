@@ -1,22 +1,23 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, inputs, machine, ... }:
 
 {
   imports = [
     ./disks.nix
-    ./ephemeral.nix
     ./hardware.nix
-    ../../modules/nixos/system/devices.nix
+    ./ephemeral.nix
   ];
 
-  # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   # Custom
-  system.devices = {
+  profile = {
+    username = "dohjon";
+    hostname = "${machine}";
     rootDisk = "/dev/nvme0n1";
     luksMappedDevice = "/dev/mapper/crypted";
   };
+
+  # Use systemd boot (EFI only)
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
   # Enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -29,16 +30,17 @@
     # Use systemd in stage 1 (new). Instead of scripted stage 1 (old).
     # https://nixos.org/manual/nixos/stable/#sec-luks-file-systems-fido2-systemd
     systemd.enable = true;
-  	luks.devices."${lib.removePrefix "/dev/mapper/" config.system.devices.luksMappedDevice}" = {
+  	luks.devices."${lib.removePrefix "/dev/mapper/" config.profile.luksMappedDevice}" = {
       crypttabExtraOpts = [ "fido2-device=auto" ];
     };
   };
 
   networking.networkmanager.enable = true;
-  networking.hostName = "void";
+  networking.hostName = "${config.profile.hostname}";
 
+  # Don't allow mutation of users outside of the config.
   users.mutableUsers = false;
-  users.users.dohjon = {
+  users.users."${config.profile.username}" = {
   	isNormalUser = true;
   	extraGroups = [ "wheel" "networkmanager" ];
   	initialPassword = "12345";

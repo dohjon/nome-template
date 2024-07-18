@@ -4,9 +4,9 @@
   imports = [ inputs.disko.nixosModules.disko ];
 
   disko.devices = {
-    disk.${lib.removePrefix "/dev/" config.system.devices.rootDisk} = {
+    disk.${lib.removePrefix "/dev/" config.profile.rootDisk} = {
       type = "disk";
-      device = "${config.system.devices.rootDisk}";
+      device = "${config.profile.rootDisk}";
       content = {
         type = "gpt";
         partitions = {
@@ -25,13 +25,13 @@
             size = "100%";
             content = {
               type = "luks";
-              name = "${lib.removePrefix "/dev/mapper/" config.system.devices.luksMappedDevice}";
+              name = "${lib.removePrefix "/dev/mapper/" config.profile.luksMappedDevice}";
               content = {
                 type = "btrfs";
                 postCreateHook = ''
                   # Part of ephemeral setup, creates snapshot of empty root subvolume to rollback to later on
                   TMPDIR=$(mktemp -d)
-                  mount "${config.system.devices.luksMappedDevice}" "$TMPDIR" -o subvol=/
+                  mount "${config.profile.luksMappedDevice}" "$TMPDIR" -o subvol=/
                   trap 'umount $TMPDIR; rm -rf $TMPDIR' EXIT
                   btrfs subvolume snapshot -r $TMPDIR/root $TMPDIR/root-blank
                 '';

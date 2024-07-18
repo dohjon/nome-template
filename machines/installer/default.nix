@@ -27,7 +27,7 @@
             HOST=$1
             # URI="github:dohjon/nome-template"
             HOST_CONFIG="$URI#nixosConfigurations.$HOST.config"
-            ROOT_DISK=$(nix eval --raw "$HOST_CONFIG.system.devices.rootDisk")
+            ROOT_DISK=$(nix eval --raw "$HOST_CONFIG.profile.rootDisk")
 
             echo "Installing NixOS on $HOST with root disk $ROOT_DISK"
 

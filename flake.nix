@@ -3,11 +3,11 @@
   outputs = { self, nixpkgs, ... } @ inputs: let
 
     # Function to build a nixos configuration from system modules
-    nixosSystem = host: system: systemModules:
+    nixosSystem = machine: system: systemModules:
       nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = {inherit (self) inputs outputs;};
-        modules = systemModules ++ [./hosts/${host}];
+        specialArgs = {inherit (self) inputs outputs machine;};
+        modules = systemModules ++ [./machines/${machine}/configuration.nix];
       };
 
   in {
@@ -16,6 +16,7 @@
 
       void = nixosSystem "void" "x86_64-linux" [
         inputs.nixos-hardware.nixosModules.framework-13-7040-amd
+        modules/profile.nix
       ];
 
       installer = nixosSystem "installer" "x86_64-linux" [];

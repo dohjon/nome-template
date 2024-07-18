@@ -31,7 +31,7 @@ OK
 curl googel.com
 ```
 
-Find **Block Device** 
+Find **Block Device**
 
 In this example `/dev/nvme0n1`
 
@@ -39,7 +39,7 @@ In this example `/dev/nvme0n1`
 lsblk
 > NAME   MAJ:MIN   RM   SIZE   RO   TYPE   MOUNTPOINTS
 ...
-nvme0n1  259:0     0    932G   0    disk   
+nvme0n1  259:0     0    932G   0    disk
 ...
 ```
 
@@ -51,10 +51,10 @@ Download standalone disko configuration
 
 ```console
 # Format: sudo nix run 'github:nix-community/disko#disko-install' -- --flake <flake-url>#<flake-attr> --disk <disk-name> <disk-device>
-sudo nix run --experimental-features "nix-command flakes" 'github:nix-community/disko#disko-install' -- --write-efi-boot-entries --flake 'github:dohjon/nome-template#laptop' --disk nvme0n1 /dev/nvme0n1
+sudo nix run --experimental-features "nix-command flakes" 'github:nix-community/disko#disko-install' -- --write-efi-boot-entries --flake 'github:dohjon/nome-template#void' --disk nvme0n1 /dev/nvme0n1
 
 # You can specify commit by doing
-# 'github:dohjon/nome-template/e992516#laptop'
+# 'github:dohjon/nome-template/e992516#void'
 ```
 
 
@@ -118,7 +118,7 @@ cryptsetup luksRemoveKey /dev/nvme0n1p2 # you can also use "cryptsetup luksKillS
 # Run below command and you can verify keyslot 1 (fido2) and 2 (recovery-key) are the only keyslots used/available
 cryptsetup luksDump /dev/nvme0n1p2
 # TODO: backup luks header to persist (either encrypted or unencrypted)
-# 
+#
 ```
 
 ## Install
