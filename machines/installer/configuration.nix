@@ -13,6 +13,7 @@
 
     environment.shellAliases = {
         ll  = "ls -alh";
+        build-iso  = "git clone https://github.com/dohjon/nome-template.git /root/nixos && cd /root/nixos && time nix build --no-link --print-out-paths .#nixosConfigurations.installer.config.system.build.isoImage";
     };
 
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
