@@ -14,11 +14,25 @@
 
     # Folders you want to map
     directories = [
-      "/etc/nixos"
+      "/etc/nixos" # Optional if using flakes and flake is stored somewhere else like home directory
       "/var/lib/nixos" # contains important state: https://github.com/nix-community/impermanence/issues/178
       "/var/lib/systemd/coredump"
+      #"/var/lib/systemd" # TODO: investigate if this is better then singling out services, alot of people seem to persist this
       "/var/log"
+      "/var/db/sudo/lectured" # TODO: should this be chmod 700?
       "/etc/NetworkManager/system-connections" # TODO: store in keyring, passwords currently stored in plaintext
+      # Unfortunately it isn't possible to persist individual state folders for
+      # services using DynamicUser=yes. This is because systemd assigns
+      # dynamic UIDs to users of this service so it's impossible to set the
+      # required permissions with impermanence. Services place this dynamic
+      # user folder in /var/lib/private/<service>. I will add commented out
+      # persistence definitions in the relevant services so their files are
+      # still documented.
+      # TODO: investigate this further...
+      # {
+      #   directory = "/var/lib/private";
+      #   mode = "0700";
+      # }
     ];
 
     # Files you want to map
@@ -28,7 +42,7 @@
       # previous boots.
       "/etc/machine-id"
       #"/var/lib/logrotate.status" # TODO: investigate this further...
-
+      # "/etc/adjtime" # TODO: investigate this further...
       # TODO: need to persist /home/dohjon/nixos
     ];
 
