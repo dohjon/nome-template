@@ -13,6 +13,7 @@
     hideMounts = true;
 
     # Folders you want to map
+    # TODO: split this into the modules that are using some part for example networkmanager etc.
     directories = [
       "/etc/nixos" # Optional if using flakes and flake is stored somewhere else like home directory
       "/var/lib/nixos" # contains important state: https://github.com/nix-community/impermanence/issues/178
@@ -62,7 +63,10 @@
     #     ".config"
     #     ".gnupg"
     #     ".local"
-    #     ".ssh"
+        # {
+        #   directory = ".ssh";
+        #   mode = "0700";
+        # }
     #   ];
     #   files = [ ];
     # };
