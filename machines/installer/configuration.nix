@@ -8,7 +8,7 @@
 
     environment.systemPackages = with pkgs; [
         gitMinimal
-        (callPackage ../../modules/scripts/installer.nix {})
+        (import ../../modules/scripts/installer.nix { inherit pkgs; })
     ];
 
     environment.shellAliases = {

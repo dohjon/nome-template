@@ -4,7 +4,7 @@
   imports = [ inputs.impermanence.nixosModules.impermanence ];
 
   environment.systemPackages = with pkgs; [
-    (callPackage ../../modules/scripts/fs-diff.nix {})
+    (import ../../modules/scripts/fs-diff.nix { inherit pkgs config; })
   ];
 
   # /persist is the location you plan to store the files
