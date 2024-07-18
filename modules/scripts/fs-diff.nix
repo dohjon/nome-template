@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, config }:
 
 pkgs.writeShellApplication {
   name = "fs-diff";
@@ -23,26 +23,26 @@ pkgs.writeShellApplication {
 
     OLD_TRANSID=$(btrfs subvolume find-new "''${BLANK_ROOT_SNAPSHOT}" 9999999 | awk '{print $NF}')
 
-    btrfs subvolume find-new "''$ROOT_SUBVOL" "''$OLD_TRANSID" |
+    btrfs subvolume find-new "$ROOT_SUBVOL" "$OLD_TRANSID" |
       sed '$d' |
       cut -f17- -d' ' |
       sort |
       uniq |
       while read -r path;
       do
-        path="/''$path"
-        if [ -L "''$path" ];
+        path="/$path"
+        if [ -L "$path" ];
         then
           : # The path is a symbolic link, so is probably handled by NixOS
-        elif [ -d "''$path" ];
+        elif [ -d "$path" ];
         then
           : # The path is a directory; ignore
         else
-          echo "''$path"
+          echo "$path"
         fi
       done
 
-    umount "''$MOUNTDIR"
-    rm -r  "''$MOUNTDIR"
+    umount "$MOUNTDIR"
+    rm -r  "$MOUNTDIR"
   '';
 }
