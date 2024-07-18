@@ -5,8 +5,8 @@
     # Function to build a nixos configuration from system modules
     nixosSystem = machine: system: systemModules:
       nixpkgs.lib.nixosSystem {
-        inherit system machine;
-        specialArgs = {inherit (self) inputs outputs machine;};
+        inherit system;
+        specialArgs = {inherit self inputs outputs machine;};
         modules = systemModules ++ [./machines/${machine}/configuration.nix];
       };
 
