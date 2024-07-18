@@ -16,7 +16,7 @@
 
       void = nixosSystem "void" "x86_64-linux" [
         inputs.nixos-hardware.nixosModules.framework-13-7040-amd
-        modules/profile.nix
+        ./modules/profile.nix
       ];
 
       installer = nixosSystem "installer" "x86_64-linux" [];
