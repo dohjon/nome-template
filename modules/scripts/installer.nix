@@ -42,7 +42,7 @@ pkgs.writeShellApplication {
 
     ROOT_DISK=$(nix_eval "profile.rootDisk")
     USERNAME=$(nix_eval "profile.username")
-    MUTABLE_USERS=$(nix_eval "profile.mutableUsers")
+    MUTABLE_USERS=$(nix_eval "users.mutableUsers")
 
     if confirm "Do you want to continue? (WARNING! this will wipe disk $ROOT_DISK)"; then
         echo "Proceeding with installation on machine: $MACHINE"
